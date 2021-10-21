@@ -16,7 +16,7 @@
 #include "Arcade.h"
 #include "Informes.h"
 
-#define SALON_LEN 10
+#define SALON_LEN 3
 #define ARCADE_LEN 10
 #define JUEGOS_LEN 10
 #define SHOPPING 0
@@ -29,8 +29,6 @@ int main(void)
 
 	Salon salones[SALON_LEN];
 	Arcade arcades[ARCADE_LEN];
-	Game juegos[JUEGOS_LEN];
-
 
 	int opcionDeMenu;
 	int emptyPositionSalon;
@@ -43,7 +41,10 @@ int main(void)
 	int IdArcadeBuscado;
 	int posicionIdArcadeAModificar;
 	int opcionMenuInforme;
-
+	int idSalon;
+	int contArcade;
+	int contSalon;
+	float promedioArcadeSalon;
 
 
 
@@ -51,20 +52,20 @@ int main(void)
 	salon_initList(salones,SALON_LEN);
 	arcade_initList(arcades,ARCADE_LEN);
 
-	salon_altaForzada(salones, SALON_LEN, 0, 1, "Salon A", "Avellaneda", SHOPPING);
-	salon_altaForzada(salones, SALON_LEN, 1, 2, "Salon B", "WILDE", LOCAL);
-	salon_altaForzada(salones, SALON_LEN, 2, 3, "Salon C", "FLORES", SHOPPING);
+	salon_altaForzada(salones, SALON_LEN,0,1,"Salon A","Avellaneda",SHOPPING);
+	salon_altaForzada(salones, SALON_LEN,1,2,"Salon B","WILDE",LOCAL);
+	salon_altaForzada(salones, SALON_LEN,2,3,"Salon C","FLORES",SHOPPING);
 
-	arcade_altaForzada(arcades,ARCADE_LEN,0,1,"Juju","Argentino",1,300,2 ,1);
-	arcade_altaForzada(arcades,ARCADE_LEN,1,2,"Juju","Paraguay",1,500,4 ,1);
-	arcade_altaForzada(arcades,ARCADE_LEN,2,3,"PacMan","Nippon",0,300,1 ,1);
+	arcade_altaForzada(arcades,ARCADE_LEN,0,1,"Juju","Argentino",1,300,4,2);
+	arcade_altaForzada(arcades,ARCADE_LEN,1,2,"Juju","Paraguay",1,500,4,2);
+	arcade_altaForzada(arcades,ARCADE_LEN,2,3,"PacMan","Nippon",0,300,4,2);
 	arcade_altaForzada(arcades,ARCADE_LEN,3,4,"Futbol200","Korea",1,600,4,3);
-	arcade_altaForzada(arcades,ARCADE_LEN,4,5,"Daytona","France",1,300,2 ,3);
-	arcade_altaForzada(arcades,ARCADE_LEN,5,6,"Tetris","URRS",1,500,4 ,3);
-	arcade_altaForzada(arcades,ARCADE_LEN,6,7,"Simpsons","USA",0,300,1 ,1);
-	arcade_altaForzada(arcades,ARCADE_LEN,7,8,"KungFu Master","China",1,600,4,3);
-	arcade_altaForzada(arcades,ARCADE_LEN,8,9,"Wonder Boy","USA",0,300,1 ,1);
-	arcade_altaForzada(arcades,ARCADE_LEN,9,10,"Street Fighter","China",1,600,4,3);
+	arcade_altaForzada(arcades,ARCADE_LEN,4,5,"PacMan","France",1,300,4,3);
+	arcade_altaForzada(arcades,ARCADE_LEN,5,6,"Tetris","URRS",1,500,4,2);
+	arcade_altaForzada(arcades,ARCADE_LEN,6,7,"Simpsons","USA",0,300,4,2);
+	arcade_altaForzada(arcades,ARCADE_LEN,7,8,"KungFu Master","China",1,600,4,2);
+	arcade_altaForzada(arcades,ARCADE_LEN,8,9,"Wonder Boy","USA",0,300,4,2);
+	arcade_altaForzada(arcades,ARCADE_LEN,9,10,"Street Fighter","China",1,600,4,2);
 
 
 
@@ -80,9 +81,6 @@ int main(void)
 			case 1:
 			if(salon_buscarPosicionLibre(salones, SALON_LEN, &emptyPositionSalon)==0)
 			{
-				salon_altaForzada(salones, SALON_LEN, 0, 1, "Salon A", "Avellaneda", SHOPPING);
-				salon_altaForzada(salones, SALON_LEN, 1, 2, "Salon B", "WILDE", LOCAL);
-				salon_altaForzada(salones, SALON_LEN, 2, 3, "Salon C", "FLORES", SHOPPING);
 				if(salon_loadArray(&salones[emptyPositionSalon])==0)
 				{
 					printf("\nSalon creado:\n");
@@ -237,10 +235,8 @@ int main(void)
 			case 8:
 			if(arcade_buscarPosicionOcupado(arcades,ARCADE_LEN,&fullPositionArcade)==0)
 			{
-				//arcade_printListaJuegos(arcades,ARCADE_LEN);
-				//game_printListaJuegos(juegos,JUEGOS_LEN);
 				game_imprimirJuegos(arcades,ARCADE_LEN);
-				//game_imprimirJuegos(arcades,ARCADE_LEN,juegos);
+
 			}
 
 			else
@@ -259,34 +255,64 @@ int main(void)
 					switch(opcionMenuInforme)
 					{
 						case 1:
-						if(inf_ContDeArcade(arcades,ARCADE_LEN)>0)
+						if(arcade_buscarPosicionOcupado(arcades,ARCADE_LEN,&fullPositionArcade)==0)
 						{
-							inf_salonesCuatroArcade(salones,SALON_LEN,arcades,ARCADE_LEN);
+							inf_printSalonesCuatroArcade(salones,SALON_LEN,arcades,ARCADE_LEN);
 						}
-
 						break;
 
 						case 2:
-						inf_ArcadeDosJugadores(arcades,ARCADE_LEN,salones,SALON_LEN);
+						if(arcade_buscarPosicionOcupado(arcades,ARCADE_LEN,&fullPositionArcade)==0)
+						{
+							inf_printArcadeDosJugadores(arcades,ARCADE_LEN,salones,SALON_LEN);
+						}
 						break;
 
 						case 3:
+						if(arcade_buscarPosicionOcupado(arcades,ARCADE_LEN,&fullPositionArcade)==0)
+						{
+							inf_printSalonInfo(salones,SALON_LEN,arcades,ARCADE_LEN);
+						}
 						break;
 
 						case 4:
+						if(getInt(&idSalon, 1, 999999, 3, "Ingrese el Id del Salon:", "Error")==0)
+						{
+							inf_printSalonPorId(salones,SALON_LEN,idSalon);
+							inf_printArcadePorIdSalon(arcades,ARCADE_LEN,idSalon);
+						}
 						break;
 
 						case 5:
+						inf_printSalonesMayorCantArcade(salones,SALON_LEN,arcades,ARCADE_LEN);
 						break;
 
 						case 6:
+						inf_printCantMaximaFichaPorSalon(arcades,ARCADE_LEN);
 						break;
 
 						case 7:
+						inf_imprimirArcadePorJuegos(arcades,ARCADE_LEN);
 						break;
 
+						case 8:
+						inf_printSalonCompleto(salones,SALON_LEN,arcades,ARCADE_LEN);
+						break;
+
+						case 9:
+						contArcade=inf_contDeArcade(arcades,ARCADE_LEN);
+						contSalon=inf_contDeSalon(salones,SALON_LEN);
+						if(contSalon>0)
+						{
+							promedioArcadeSalon=inf_promedioArcadePorSalon(contArcade, contSalon);
+							printf("\nla cantidad de arcades es %d", contArcade);
+							printf("\nla cantidad de salones es %d", contSalon);
+							printf("\nEl promedio es %.2f",promedioArcadeSalon);
+						}
+
+						break;
 					}
-				}while(opcionMenuInforme!=8);
+				}while(opcionMenuInforme!=10);
 			}
 			else
 			{

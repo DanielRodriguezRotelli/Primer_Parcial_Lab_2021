@@ -321,9 +321,11 @@ int arcade_modificarArray(Arcade* list, int len, int posicionId)
 					break;
 
 					case 2:
-					game_imprimirJuegos(list,len);
-					getText(nombreJuegoAux, NOMBREJUEGO_LEN, "\nIngrese el nombre del juego: ", "Error", 3);
-					strncpy(list[posicionId].nombreDelJuego,nombreJuegoAux,sizeof(list[posicionId].nombreDelJuego));
+					if(game_imprimirJuegos(list,len)==0)
+					{
+						getText(nombreJuegoAux, NOMBREJUEGO_LEN, "\nIngrese el nombre del juego: ", "Error", 3);
+						strncpy(list[posicionId].nombreDelJuego,nombreJuegoAux,sizeof(list[posicionId].nombreDelJuego));
+					}
 					break;
 
 					case 3:
